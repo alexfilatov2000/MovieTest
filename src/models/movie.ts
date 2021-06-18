@@ -19,12 +19,18 @@ export const getAllMoviesByTitleModel = async (title: any): Promise<Movie[]> => 
     });
 };
 
-export const getAllMoviesByPeopleModel = async (full_name: any): Promise<People[]> => {
-    const people: Repository<People> = getManager().getRepository(People);
-    return people.find({
-        where: { full_name: Like(`%${full_name}%`) },
-        relations: ['movies'],
+export const getAllMoviesByPeopleModel = async (full_name: any): Promise<Movie[]> => {
+    const movie: Repository<Movie> = getManager().getRepository(Movie);
+    let data = await movie.find({ relations: ['people'] });
+    const regex = new RegExp(full_name, 'gi');
+
+    data = data.filter((item) => {
+        for (const val of item.people) {
+            if (regex.test(val.full_name)) return true;
+        }
     });
+
+    return data;
 };
 
 export const getSpecMovieModel = async (id: number): Promise<Movie> => {
@@ -41,7 +47,7 @@ export const findByNamesModel = async (names: string[]): Promise<People[]> => {
     return arr;
 };
 
-export const addMovieModel = async (data: Movie, people: People[]): Promise<void> => {
+export const addMovieModel = async (data: Movie, people: People[], picture: string): Promise<void> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
 
     const movieToBeSaved: Movie = new Movie();
@@ -49,6 +55,7 @@ export const addMovieModel = async (data: Movie, people: People[]): Promise<void
     movieToBeSaved.year = data.year;
     movieToBeSaved.type = data.type;
     movieToBeSaved.people = people;
+    movieToBeSaved.picture = picture;
 
     await movie.save(movieToBeSaved);
 };

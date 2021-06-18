@@ -8,3 +8,10 @@ export const addPeronModel = async (data: People): Promise<void> => {
     personToBeSaved.full_name = data.full_name;
     await peopleRepository.save(personToBeSaved);
 };
+
+export const getAllPeopleModel = async (): Promise<People[]> => {
+    const peopleRepository: Repository<People> = getManager().getRepository(People);
+    return peopleRepository.find({
+        relations: ['movies'],
+    });
+};

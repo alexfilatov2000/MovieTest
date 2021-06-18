@@ -40,8 +40,9 @@ export default class MovieController {
     public static async addMovie(ctx: Context): Promise<void> {
         try {
             const data = await addMovieSchema.validateAsync(ctx.request.body);
+            if (!ctx.file) throw new Error('Only .png, .jpg and .jpeg format allowed!');
             const people = await findByNamesModel(data.people);
-            await addMovieModel(data, people);
+            await addMovieModel(data, people, ctx.file.filename);
             ctx.status = 201;
         } catch (err) {
             ctx.status = 400;

@@ -6,10 +6,10 @@ export class Movie {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: true })
+    @Column()
     title: string;
 
-    @Column({ nullable: true })
+    @Column()
     year: number;
 
     @Column({
@@ -18,6 +18,9 @@ export class Movie {
         default: 'DVD',
     })
     type: 'VHS' | 'DVD' | 'Blu-Ray';
+
+    @Column()
+    picture: string;
 
     @ManyToMany(() => People, (people) => people.movies, {
         onDelete: 'CASCADE',
