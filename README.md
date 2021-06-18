@@ -39,6 +39,11 @@ Simple implementation of movie application.⬇️⬇️⬇️
 
 <img src="public/db.png"></img>
 
+##**Visualization**:<br/>
+<img src="public/addMovie.png"></img><br/>
+<img src="public/addPerson.png"></img><br/>
+<img src="public/allMovies.png"></img><br/>
+
 #installation for mac users:
 
 - Before start, you need to install PostgreSQL
