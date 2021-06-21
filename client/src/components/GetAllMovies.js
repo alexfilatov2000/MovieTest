@@ -44,23 +44,7 @@ const useStyles = makeStyles((theme) => ({
     input: {
         verticalAlign: "middle",
         paddingRight: 10
-    },
-    peoplePlace: {
-        flex: 1,
-        justifyContent: "center"
-    },
-    peopleArr: {
-        marginRight: 10,
-        fontSize: 10,
-        height: 35,
-        textTransform: "lowercase",
-        color: "#39739d",
-        backgroundColor: "#e1ecf4",
-        '&:hover': {
-            backgroundColor: "#d1e5f1",
-            color: "#2c5777",
-        },
-    },
+    }
 }));
 
 const GetAllMovies = () => {
@@ -130,19 +114,6 @@ const GetAllMovies = () => {
                                 <Typography gutterBottom variant="h5" component="h2">
                                     {item.title}
                                 </Typography>
-
-                                <Box className={classes.peoplePlace} display="flex">
-                                    {item.people.map(p => (
-                                        <Button
-                                            className={classes.peopleArr}
-                                            type="submit"
-                                            variant="contained"
-                                            key={p.id}
-                                        >
-                                            {p.full_name}
-                                        </Button>
-                                    ))}
-                                </Box>
 
                                 <Typography variant="body2" color="textSecondary" component="p">
                                     Release Date - {item.year}

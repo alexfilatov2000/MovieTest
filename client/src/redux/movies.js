@@ -10,7 +10,8 @@ const slice = createSlice({
     initialState: {
         movies: [],
         specMovie: null,
-        error: null
+        error: null,
+        openDialog: false
     },
     reducers: {
         getAllMoviesSuccess: (state, action) => {
@@ -32,7 +33,21 @@ const slice = createSlice({
             state.movies = action.payload;
             state.error = null;
         },
-
+        dialogOpenSuccess: (state, action) => {
+            state.openDialog = true;
+            state.error = null;
+        },
+        dialogCloseSuccess: (state, action) => {
+            state.openDialog = false;
+            state.error = null;
+        },
+        saveTxtFailure: (state, action) => {
+            state.error = action.payload;
+        },
+        saveTxtSuccess: (state, action) => {
+            state.openDialog = false;
+            state.error = null;
+        },
     }
 })
 export default slice.reducer;
@@ -40,7 +55,7 @@ export default slice.reducer;
 /* ===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===| */
 /** @Actions**/
 
-const { getAllMoviesSuccess, getSpecMovieSuccess, addMovieSuccess, addMovieFailure, getAllMoviesByOptionSuccess } = slice.actions;
+const { getAllMoviesSuccess, getSpecMovieSuccess, addMovieSuccess, addMovieFailure, getAllMoviesByOptionSuccess, dialogOpenSuccess, dialogCloseSuccess, saveTxtFailure, saveTxtSuccess } = slice.actions;
 
 export const getAllMoviesR = () => async dispatch => {
     try {
@@ -81,8 +96,25 @@ export const deleteMovieR = (id, history) => async dispatch => {
 export const getAllMoviesByOptionR = (value, type) => async dispatch => {
     try {
         const res = await axios.get(`${config.url}/api/movies?${type}=${value}`);
-        dispatch(getAllMoviesSuccess(res.data));
+        dispatch(getAllMoviesByOptionSuccess(res.data));
     } catch (err) {
+    }
+}
+
+export const dialogOpen = () => async dispatch => {
+    dispatch(dialogOpenSuccess())
+}
+
+export const dialogClose = () => async dispatch => {
+    dispatch(dialogCloseSuccess())
+}
+
+export const saveTxt = (img) => async dispatch => {
+    try {
+        const res = await axios.post(`${config.url}/api/movies/txt`, img);
+        dispatch(saveTxtSuccess(res.data));
+    } catch (err) {
+        dispatch(saveTxtFailure(err.response.data));
     }
 }
 
