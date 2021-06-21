@@ -17,12 +17,14 @@ Simple implementation of movie application.⬇️⬇️⬇️
     - [Koa-multer](https://www.npmjs.com/package/multer)- for uploading images
     - [ESLint](https://eslint.org/)- for good style codding
     - [Prettier](https://prettier.io/)- for good style codding
+    - [Koa-multer](https://www.npmjs.com/package/multer)- for uploading images
 
 ## ☑ TODO
 ##**Movie entity**:<br/>
 
 - [x] GET - /api/movie - get all movies<br/>
-- [x] POST - /api/movies/:id - get specified movie by id<br/>
+- [x] GET - /api/movies/:id - get specified movie by id<br/>
+- [x] POST - /api/movies/txt - add movies by *.txt file, requirement parameters are [upload]<br/>
 - [x] POST - /api/movies - add new movie, requirement parameters are [upload, title, year, type, people]<br/>
 - [x] DELETE - /api/movies/:id - delete movie<br/>
 
