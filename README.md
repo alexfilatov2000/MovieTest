@@ -67,6 +67,13 @@ Simple implementation of movie application.⬇️⬇️⬇️
 > CREATE DATABASE moviedb; 
 ```
 
+- Then in ormconfig.json change username and password 
+
+```md
+> "username": "YOUR_USERNAME",
+> "password": "YOUR_PASSWORD,
+```
+
 #usage:
 
 - to start server side
