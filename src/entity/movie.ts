@@ -19,7 +19,7 @@ export class Movie {
     })
     type: 'VHS' | 'DVD' | 'Blu-Ray';
 
-    @Column()
+    @Column({ nullable: true })
     picture: string;
 
     @ManyToMany(() => People, (people) => people.movies, {

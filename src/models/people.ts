@@ -15,3 +15,8 @@ export const getAllPeopleModel = async (): Promise<People[]> => {
         relations: ['movies'],
     });
 };
+
+export const addPeopleModel = async (data: People[]): Promise<void> => {
+    const peopleRepository: Repository<People> = getManager().getRepository(People);
+    await peopleRepository.save(data);
+};

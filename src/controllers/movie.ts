@@ -9,6 +9,10 @@ import {
     getAllMoviesByPeopleModel,
 } from '../models/movie';
 import { addMovieSchema } from '../lib/joi/movieSchema';
+import * as fs from 'fs';
+import { readFile } from '../lib/utils/readMovies';
+import { transform } from '../lib/utils/transform';
+import { addPeopleModel } from '../models/people';
 
 export default class MovieController {
     public static async getAllMovies(ctx: Context): Promise<void> {
@@ -53,6 +57,23 @@ export default class MovieController {
     public static async deleteMovie(ctx: Context): Promise<void> {
         try {
             ctx.body = await deleteMovieModel(ctx.params.id);
+        } catch (err) {
+            ctx.status = 400;
+            ctx.body = { error: err.message };
+        }
+    }
+
+    public static async addMovieFromFile(ctx: Context): Promise<void> {
+        try {
+            const file = readFile(ctx.file);
+            const data = transform(file);
+
+            for (const val of data) {
+                await addPeopleModel(val.people);
+                // @ts-ignore
+                await addMovieModel(val, val.people, '');
+            }
+            ctx.status = 201;
         } catch (err) {
             ctx.status = 400;
             ctx.body = { error: err.message };
