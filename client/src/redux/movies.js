@@ -11,7 +11,8 @@ const slice = createSlice({
         movies: [],
         specMovie: null,
         error: null,
-        openDialog: false
+        openDialog: false,
+        isPending: false
     },
     reducers: {
         getAllMoviesSuccess: (state, action) => {
@@ -25,9 +26,11 @@ const slice = createSlice({
         },
         addMovieSuccess: (state, action) => {
             state.error = null;
+            state.isPending = false;
         },
         addMovieFailure: (state, action) => {
             state.error = action.payload;
+            state.isPending = false;
         },
         getAllMoviesByOptionSuccess: (state, action) => {
             state.movies = action.payload;
@@ -43,9 +46,15 @@ const slice = createSlice({
         },
         saveTxtFailure: (state, action) => {
             state.error = action.payload;
+            state.isPending = false;
         },
         saveTxtSuccess: (state, action) => {
             state.openDialog = false;
+            state.error = null;
+            state.isPending = false;
+        },
+        addMoviePending: (state, action) => {
+            state.isPending = action.payload;
             state.error = null;
         },
     }
@@ -55,7 +64,9 @@ export default slice.reducer;
 /* ===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===| */
 /** @Actions**/
 
-const { getAllMoviesSuccess, getSpecMovieSuccess, addMovieSuccess, addMovieFailure, getAllMoviesByOptionSuccess, dialogOpenSuccess, dialogCloseSuccess, saveTxtFailure, saveTxtSuccess } = slice.actions;
+const { getAllMoviesSuccess, getSpecMovieSuccess, addMovieSuccess, addMovieFailure,
+    getAllMoviesByOptionSuccess, dialogOpenSuccess,
+    dialogCloseSuccess, saveTxtFailure, saveTxtSuccess, addMoviePending } = slice.actions;
 
 export const getAllMoviesR = () => async dispatch => {
     try {
@@ -76,6 +87,7 @@ export const getSpecMovieR = (id) => async dispatch => {
 
 export const addMovieR = (data, history, setOpen) => async dispatch => {
     try {
+        dispatch(addMoviePending(true));
         const res = await axios.post(`${config.url}/api/movies`, data);
         dispatch(addMovieSuccess(res.data));
         history.replace('/');
@@ -111,6 +123,7 @@ export const dialogClose = () => async dispatch => {
 
 export const saveTxt = (img) => async dispatch => {
     try {
+        dispatch(addMoviePending(true));
         const res = await axios.post(`${config.url}/api/movies/txt`, img);
         dispatch(saveTxtSuccess(res.data));
     } catch (err) {

@@ -114,6 +114,7 @@ const Home = () => {
                     />
 
                     {movie.error && <div className={classes.error}>Something Wrong With Your File</div>}
+                    {movie.isPending && <div className={classes.error}>Waite please...</div>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

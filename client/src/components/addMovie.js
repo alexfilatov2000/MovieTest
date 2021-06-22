@@ -74,7 +74,8 @@ const AddMovie = () => {
         setOpen(false);
     };
 
-    return (
+    if (movie.isPending) return (<div>Wait please</div>);
+    else return (
         <Container>
             <Typography variant="h4" className={classes.title}>
                 Add a Movie
