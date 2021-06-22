@@ -71,7 +71,7 @@ Simple implementation of movie application.⬇️⬇️⬇️
 
 ```md
 > "username": "YOUR_USERNAME",
-> "password": "YOUR_PASSWORD,
+> "password": "YOUR_PASSWORD",
 ```
 
 #usage:
