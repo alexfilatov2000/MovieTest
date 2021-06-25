@@ -1,3 +1,5 @@
+import {checkIfEmpty} from "./checkIfEmpty";
+
 interface people {
     full_name?: string;
 }
@@ -10,6 +12,7 @@ interface movie {
 
 export const transform = (data: string): movie[] => {
     const arr = data.split('\n');
+    if (checkIfEmpty(arr)) throw new Error('Your file is empty, please fill it');
     const mainArr = [];
     let obj: movie = {};
     let cnt = 0;
@@ -19,6 +22,7 @@ export const transform = (data: string): movie[] => {
             obj = {};
         } else {
             const match = val.match(/.*[a-z]:/g);
+            if (!match) throw new Error('Something wrong with your file');
             if (match[0] === 'Title:') {
                 obj.title = val.match(/:.*/)[0].substring(1).trim();
             } else if (match[0] === 'Release Year:') {

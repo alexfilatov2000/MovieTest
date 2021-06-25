@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteMovieR, getSpecMovieR} from "../redux/movies";
+import {deleteMovieR, getSpecMovieR, setOpenDialog} from "../redux/movies";
 import {
     Avatar,
     Box,
@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import {config} from "../config";
 import { useHistory, useParams} from "react-router-dom";
+import AlertDialog from "./dialog";
 
 const useStyles = makeStyles((theme) => ({
     header: {
@@ -57,17 +58,17 @@ const GetSpecMovie = () => {
         dispatch(getSpecMovieR(id));
     }, []);
 
-    const deleteMovie = (e) => {
-        e.preventDefault();
-        dispatch(deleteMovieR(id, history))
-    }
+
+    const handleClickOpen = () => {
+        dispatch(setOpenDialog(true))
+    };
 
     return (
         <div className={classes.root}>
             {movie.specMovie &&
                 <div>
                     <Typography variant="h3" className={classes.header}>
-                        Specified Movie
+                        {movie.specMovie.title}
                     </Typography>
 
                     <Box className={classes.data}>
@@ -99,7 +100,7 @@ const GetSpecMovie = () => {
                         </Typography>
 
                         <Button
-                            onClick={deleteMovie}
+                            onClick={handleClickOpen}
                             type="submit"
                             color="secondary"
                             variant="contained"
@@ -107,6 +108,7 @@ const GetSpecMovie = () => {
                         >
                             delete
                         </Button>
+                        <AlertDialog id={id} history={history}/>
                     </Box>
                 </div>
             }

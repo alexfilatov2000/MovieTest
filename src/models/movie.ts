@@ -47,8 +47,10 @@ export const findByNamesModel = async (names: string[]): Promise<People[]> => {
     return arr;
 };
 
-export const addMovieModel = async (data: Movie, people: People[], picture: string): Promise<void> => {
+export const addMovieModel = async (data: Movie, people: People[], picture: string): Promise<Movie> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
+    let x = await movie.findOne({where: {title: data.title}})
+    if (x) throw new Error(`Movie with title: "${data.title}" already exist!`)
 
     const movieToBeSaved: Movie = new Movie();
     movieToBeSaved.title = data.title;
@@ -57,7 +59,7 @@ export const addMovieModel = async (data: Movie, people: People[], picture: stri
     movieToBeSaved.people = people;
     movieToBeSaved.picture = picture;
 
-    await movie.save(movieToBeSaved);
+    return movie.save(movieToBeSaved);
 };
 
 export const deleteMovieModel = async (id: number): Promise<DeleteResult> => {

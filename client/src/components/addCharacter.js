@@ -1,13 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
-import {Typography, Container, TextField, Button, makeStyles, Snackbar} from "@material-ui/core";
+import {Typography, Container, TextField, Button, makeStyles} from "@material-ui/core";
 import {useState} from "react";
-import MuiAlert from "@material-ui/lab/Alert";
 import {addPersonR} from "../redux/people";
-
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import CreatedError from "./addCharacter/createdError";
+import CreatedSuccess from "./addCharacter/createdSuccess";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -26,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
     alert: {
         fontSize: 30
     },
+    button: {
+        marginLeft: 30
+    }
 }));
 
 const AddPerson = () => {
@@ -35,39 +35,20 @@ const AddPerson = () => {
     const person = useSelector(state => state.people);
 
     const [full_name, setFullName] = useState('');
-    const [open, setOpen] = useState(true);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(addPersonR({ full_name }, history, setOpen))
+        dispatch(addPersonR({ full_name }, setFullName))
     }
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
-
-    return (
+    if (person.isPending) return (<div>Wait please...</div>);
+    else return (
         <Container>
             <Typography variant="h4" className={classes.title}>
                 Add a Character
             </Typography>
 
-            {person.error &&
-            <div>
-                <Snackbar
-                    open={open}
-                    autoHideDuration={10000}
-                    onClose={handleClose}
-                    className={classes.snackbar}
-                >
-                    <Alert onClose={handleClose} severity="error" className={classes.alert}>
-                        {person.error}
-                    </Alert>
-                </Snackbar>
-            </div>
-            }
+            {person.error && <CreatedError />}
+            {person.openSuccess && <CreatedSuccess />}
 
             <form noValidate autoComplete="off" onSubmit={handleSubmit}>
                 <TextField
@@ -85,9 +66,18 @@ const AddPerson = () => {
                     type="submit"
                     color="secondary"
                     variant="contained"
-
                 >
                     Add Character
+                </Button>
+
+                <Button
+                    className={classes.button}
+                    type="submit"
+                    color="default"
+                    variant="contained"
+                    onClick={() => history.replace("/")}
+                >
+                    Cancel
                 </Button>
             </form>
 

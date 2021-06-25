@@ -12,7 +12,10 @@ const slice = createSlice({
         specMovie: null,
         error: null,
         openDialog: false,
-        isPending: false
+        isPending: false,
+        openSuccess: false,
+        openError: false,
+        openDeleteDialog: false
     },
     reducers: {
         getAllMoviesSuccess: (state, action) => {
@@ -27,10 +30,12 @@ const slice = createSlice({
         addMovieSuccess: (state, action) => {
             state.error = null;
             state.isPending = false;
+            state.openSuccess = true;
         },
         addMovieFailure: (state, action) => {
             state.error = action.payload;
             state.isPending = false;
+            state.openError = true;
         },
         getAllMoviesByOptionSuccess: (state, action) => {
             state.movies = action.payload;
@@ -49,6 +54,7 @@ const slice = createSlice({
             state.isPending = false;
         },
         saveTxtSuccess: (state, action) => {
+            state.movies.push(...action.payload);
             state.openDialog = false;
             state.error = null;
             state.isPending = false;
@@ -56,6 +62,18 @@ const slice = createSlice({
         addMoviePending: (state, action) => {
             state.isPending = action.payload;
             state.error = null;
+        },
+        onCloseSuccess: (state, action) => {
+            state.openSuccess = false;
+        },
+        onCloseError: (state, action) => {
+            state.openError = false;
+        },
+        setOpenDialogSuccess: (state, action) => {
+            state.openDeleteDialog = action.payload;
+        },
+        deleteMovieSuccess: (state, action) => {
+            state.openDeleteDialog = false;
         },
     }
 })
@@ -66,7 +84,8 @@ export default slice.reducer;
 
 const { getAllMoviesSuccess, getSpecMovieSuccess, addMovieSuccess, addMovieFailure,
     getAllMoviesByOptionSuccess, dialogOpenSuccess,
-    dialogCloseSuccess, saveTxtFailure, saveTxtSuccess, addMoviePending } = slice.actions;
+    dialogCloseSuccess, saveTxtFailure, saveTxtSuccess,
+    addMoviePending, onCloseSuccess, onCloseError, setOpenDialogSuccess, deleteMovieSuccess } = slice.actions;
 
 export const getAllMoviesR = () => async dispatch => {
     try {
@@ -85,14 +104,14 @@ export const getSpecMovieR = (id) => async dispatch => {
     }
 }
 
-export const addMovieR = (data, history, setOpen) => async dispatch => {
+export const addMovieR = (data, setTitle, setYear) => async dispatch => {
     try {
         dispatch(addMoviePending(true));
         const res = await axios.post(`${config.url}/api/movies`, data);
+        setTitle('');
+        setYear('')
         dispatch(addMovieSuccess(res.data));
-        history.replace('/');
     } catch (err) {
-        setOpen(true);
         dispatch(addMovieFailure(err.response.data.error));
     }
 }
@@ -100,6 +119,7 @@ export const addMovieR = (data, history, setOpen) => async dispatch => {
 export const deleteMovieR = (id, history) => async dispatch => {
     try {
         await axios.delete(`${config.url}/api/movies/${id}`);
+        dispatch(deleteMovieSuccess())
         history.replace('/');
     } catch (err) {
     }
@@ -127,7 +147,19 @@ export const saveTxt = (img) => async dispatch => {
         const res = await axios.post(`${config.url}/api/movies/txt`, img);
         dispatch(saveTxtSuccess(res.data));
     } catch (err) {
-        dispatch(saveTxtFailure(err.response.data));
+        dispatch(saveTxtFailure(err.response.data.error));
     }
+}
+
+export const closeSuccess = () => async dispatch => {
+    dispatch(onCloseSuccess());
+}
+
+export const closeError = () => async dispatch => {
+    dispatch(onCloseError());
+}
+
+export const setOpenDialog = (val) => async dispatch => {
+    dispatch(setOpenDialogSuccess(val));
 }
 

@@ -6,10 +6,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 import {Autocomplete} from "@material-ui/lab";
 import {getAllPeopleR} from "../redux/people";
 import {addMovieR} from "../redux/movies";
-
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import CreatedError from "./addMovie/createdError";
+import CreatedSuccess from "./addMovie/createdSuccess";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -29,7 +27,11 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 30
     },
     button: {
-        marginTop: 20
+        marginTop: 20,
+        marginRight: 40
+    },
+    required: {
+        color: "red"
     }
 }));
 
@@ -44,9 +46,7 @@ const AddMovie = () => {
     const [year, setYear] = useState('');
     const [type, setType] = useState('DVD');
     const [people, setPeople] = useState([]);
-    const [open, setOpen] = useState(true);
     const [myFile, setMyFile] = useState(null);
-
 
     useEffect(() => {
         dispatch(getAllPeopleR())
@@ -63,38 +63,18 @@ const AddMovie = () => {
         for (let i = 0; i < peopleData.length; i++) {
             data.append('people[]', peopleData[i]);
         }
-
-        dispatch(addMovieR(data, history, setOpen))
+        dispatch(addMovieR(data, setTitle, setYear))
     }
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
-
-    if (movie.isPending) return (<div>Wait please</div>);
+    if (movie.isPending) return (<div>Wait please...</div>);
     else return (
         <Container>
             <Typography variant="h4" className={classes.title}>
                 Add a Movie
             </Typography>
 
-            {movie.error &&
-            <div>
-                <Snackbar
-                    open={open}
-                    autoHideDuration={10000}
-                    onClose={handleClose}
-                    className={classes.snackbar}
-                >
-                    <Alert onClose={handleClose} severity="error" className={classes.alert}>
-                        {movie.error}
-                    </Alert>
-                </Snackbar>
-            </div>
-            }
+            {movie.error && <CreatedError />}
+            {movie.openSuccess && <CreatedSuccess />}
 
             <form noValidate autoComplete="off" onSubmit={handleSubmit}>
                 <TextField
@@ -132,6 +112,7 @@ const AddMovie = () => {
                             label="People"
                             name="People"
                             fullWidth
+                            required
                         />
                     )}
                 />
@@ -142,12 +123,14 @@ const AddMovie = () => {
                     value={type}
                     variant="filled"
                     fullWidth
+                    required
                     onChange={(e) => setType(e.target.value)}
                 >
                     <MenuItem value={'DVD'}>DVD</MenuItem>
                     <MenuItem value={'VHS'}>VHS</MenuItem>
                     <MenuItem value={'Blu-Ray'}>Blu-Ray</MenuItem>
                 </Select>
+                <div className={classes.required}>Choose one from the list*</div>
 
                 <TextField
                     className={classes.button}
@@ -159,6 +142,7 @@ const AddMovie = () => {
                     required
                     fullWidth
                 />
+                <div className={classes.required}>Available only: jpg, jpeg, png formats*</div>
 
                 <Button
                     className={classes.button}
@@ -168,6 +152,16 @@ const AddMovie = () => {
 
                 >
                     Add Movie
+                </Button>
+
+                <Button
+                    className={classes.button}
+                    type="submit"
+                    color="default"
+                    variant="contained"
+                    onClick={() => history.replace("/")}
+                >
+                    Cancel
                 </Button>
             </form>
 

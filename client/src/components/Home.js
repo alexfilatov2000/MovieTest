@@ -113,7 +113,7 @@ const Home = () => {
                         required
                     />
 
-                    {movie.error && <div className={classes.error}>Something Wrong With Your File</div>}
+                    {movie.error && <div className={classes.error}>{movie.error}</div>}
                     {movie.isPending && <div className={classes.error}>Waite please...</div>}
                 </DialogContent>
                 <DialogActions>
