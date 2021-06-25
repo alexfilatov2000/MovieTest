@@ -47,8 +47,6 @@ const AddMovie = () => {
     const [people, setPeople] = useState([]);
     const [myFile, setMyFile] = useState(null);
 
-    console.log(myFile);
-
     useEffect(() => {
         dispatch(getAllPeopleR())
     }, [dispatch])
