@@ -22,6 +22,7 @@ const slice = createSlice({
             state.movies = action.payload;
             state.error = null;
             state.specMovie = null;
+            state.openSuccess = false;
         },
         getSpecMovieSuccess: (state, action) => {
             state.specMovie = action.payload;
@@ -91,9 +92,9 @@ const { getAllMoviesSuccess, getSpecMovieSuccess, addMovieSuccess, addMovieFailu
     addMoviePending, onCloseSuccess, onCloseError, setOpenDialogSuccess, deleteMovieSuccess,
     getAllMoviesFailure} = slice.actions;
 
-export const getAllMoviesR = (order = 'ASC') => async dispatch => {
+export const getAllMoviesR = () => async dispatch => {
     try {
-        const res = await axios.get(`${config.url}/api/movies?order=${order}`);
+        const res = await axios.get(`${config.url}/api/movies`);
         dispatch(getAllMoviesSuccess(res.data));
     } catch (err) {
     }
@@ -129,9 +130,9 @@ export const deleteMovieR = (id, history) => async dispatch => {
     }
 }
 
-export const getAllMoviesByOptionR = (value, type) => async dispatch => {
+export const getAllMoviesByOptionR = (value, type, order) => async dispatch => {
     try {
-        const res = await axios.get(`${config.url}/api/movies?${type}=${value}`);
+        const res = await axios.get(`${config.url}/api/movies?${type}=${value}&order=${order}`);
         dispatch(getAllMoviesByOptionSuccess(res.data));
     } catch (err) {
         dispatch(getAllMoviesFailure(err.response.data.error));

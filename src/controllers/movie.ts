@@ -19,9 +19,9 @@ export default class MovieController {
         try {
             let movies;
             if (ctx.query.title) {
-                movies = await getAllMoviesByTitleModel(ctx.query.title);
+                movies = await getAllMoviesByTitleModel(ctx.query);
             } else if (ctx.query.full_name) {
-                movies = await getAllMoviesByPeopleModel(ctx.query.full_name);
+                movies = await getAllMoviesByPeopleModel(ctx.query);
             } else {
                 movies = await getAllMoviesModel(ctx.query.order);
             }

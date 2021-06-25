@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, Index } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, Index, Unique} from 'typeorm';
 import { People } from './people';
 
+@Unique(['title', 'year'])
 @Entity('movie')
 export class Movie {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Index({ unique: true })
     @Column()
     title: string;
 

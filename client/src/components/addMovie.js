@@ -47,6 +47,8 @@ const AddMovie = () => {
     const [people, setPeople] = useState([]);
     const [myFile, setMyFile] = useState(null);
 
+    console.log(myFile);
+
     useEffect(() => {
         dispatch(getAllPeopleR())
     }, [dispatch])
@@ -98,6 +100,7 @@ const AddMovie = () => {
                 />
 
                 <Autocomplete
+                    value={people}
                     className={classes.inputs}
                     multiple
                     onChange={(e, value) => setPeople(value)}

@@ -46,10 +46,8 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 10
     },
     form: {
-        border: "1px solid black",
         margin: 10,
         padding: 10,
-        flex: 1
     }
 }));
 
@@ -70,20 +68,15 @@ const GetAllMovies = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(getAllMoviesByOptionR(value, type))
-    }
-
-    const sortSubmit = (e) => {
-        e.preventDefault();
-        dispatch(getAllMoviesR(sort))
+        dispatch(getAllMoviesByOptionR(value, type, sort))
     }
 
     return (
         <div className={classes.root}>
             <Home/>
 
-            <Box display="flex">
-                <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
+                <Box display="flex">
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Options</FormLabel>
                         <RadioGroup value={type} onChange={(e) => setType(e.target.value)}>
@@ -92,29 +85,6 @@ const GetAllMovies = () => {
                         </RadioGroup>
                     </FormControl>
 
-                    <Box className={classes.inpAndButt}>
-                        <TextField
-                            className={classes.input}
-                            onChange={(e) => setValue(e.target.value)}
-                            label="Value"
-                            name="val"
-                            variant="outlined"
-                            value={value}
-                            required
-                        />
-
-                        <Button
-                            type="submit"
-                            color="secondary"
-                            variant="contained"
-
-                        >
-                            Search
-                        </Button>
-                    </Box>
-                </form>
-
-                <form noValidate autoComplete="off" onSubmit={sortSubmit} className={classes.form}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Sort</FormLabel>
                         <RadioGroup value={sort} onChange={(e) => setSort(e.target.value)}>
@@ -122,17 +92,32 @@ const GetAllMovies = () => {
                             <FormControlLabel value="DESC" control={<Radio />} label="Sort descending" />
                         </RadioGroup>
                     </FormControl>
-                    <br/>
+                </Box>
+
+
+                <Box className={classes.inpAndButt}>
+                    <TextField
+                        className={classes.input}
+                        onChange={(e) => setValue(e.target.value)}
+                        label="Value"
+                        name="val"
+                        variant="outlined"
+                        value={value}
+                    />
+
                     <Button
                         type="submit"
                         color="secondary"
                         variant="contained"
-                    >
-                        Sort
-                    </Button>
-                </form>
 
-            </Box>
+                    >
+                        Search
+                    </Button>
+                </Box>
+            </form>
+
+
+
 
 
             {movie.error &&

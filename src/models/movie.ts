@@ -10,21 +10,21 @@ export const getAllMoviesModel = async (order: any = 'ASC'): Promise<Movie[]> =>
     });
 };
 
-export const getAllMoviesByTitleModel = async (title: any): Promise<Movie[]> => {
+export const getAllMoviesByTitleModel = async (query: any): Promise<Movie[]> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
     const x = await movie.find({
-        where: { title: ILike(`%${title}%`) },
-        order: { title: 'ASC' },
+        where: { title: ILike(`%${query.title}%`) },
+        order: { title: query.order || 'ASC' },
         relations: ['people'],
     });
     if (x.length === 0) throw new Error('No Movie Found With This Title');
     return x;
 };
 
-export const getAllMoviesByPeopleModel = async (full_name: any): Promise<Movie[]> => {
+export const getAllMoviesByPeopleModel = async (query: any): Promise<Movie[]> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
-    let data = await movie.find({ relations: ['people'] });
-    const regex = new RegExp(full_name, 'gi');
+    let data = await movie.find({ relations: ['people'], order: {title: query.order} });
+    const regex = new RegExp(query.full_name, 'gi');
 
     data = data.filter((item) => {
         for (const val of item.people) {
@@ -52,8 +52,8 @@ export const findByNamesModel = async (names: string[]): Promise<People[]> => {
 
 export const addMovieModel = async (data: Movie, people: People[], picture: string): Promise<Movie> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
-    const x = await movie.findOne({ where: { title: data.title } });
-    if (x) throw new Error(`Movie with title: "${data.title}" already exist!`);
+    const x = await movie.findOne({ where: { title: data.title, year: data.year } });
+    if (x) throw new Error(`Movie with title: "${data.title}" and year "${data.year}" already exist!`);
 
     const movieToBeSaved: Movie = new Movie();
     movieToBeSaved.title = data.title;
