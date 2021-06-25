@@ -1,8 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
-import {Typography, Container, TextField, Button, makeStyles, Snackbar, Select, MenuItem} from "@material-ui/core";
+import {Typography, Container, TextField, Button, makeStyles, Select, MenuItem} from "@material-ui/core";
 import {useEffect, useState} from "react";
-import MuiAlert from "@material-ui/lab/Alert";
 import {Autocomplete} from "@material-ui/lab";
 import {getAllPeopleR} from "../redux/people";
 import {addMovieR} from "../redux/movies";

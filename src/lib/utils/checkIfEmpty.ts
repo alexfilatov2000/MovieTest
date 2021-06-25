@@ -1,6 +1,6 @@
 export const checkIfEmpty = (arr): boolean => {
     let cnt = 0;
-    for (let val of arr) {
+    for (const val of arr) {
         if (val === '') {
             cnt++;
         } else {
@@ -9,4 +9,4 @@ export const checkIfEmpty = (arr): boolean => {
         }
     }
     return cnt !== 0;
-}
+};

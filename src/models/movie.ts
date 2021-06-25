@@ -1,22 +1,24 @@
-import { DeleteResult, getManager, Like, Repository } from 'typeorm';
+import { DeleteResult, getManager, ILike, Repository } from 'typeorm';
 import { People } from '../entity/people';
 import { Movie } from '../entity/movie';
 
-export const getAllMoviesModel = async (): Promise<Movie[]> => {
+export const getAllMoviesModel = async (order: any = 'ASC'): Promise<Movie[]> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
     return movie.find({
-        order: { title: 'ASC' },
+        order: { title: order },
         relations: ['people'],
     });
 };
 
 export const getAllMoviesByTitleModel = async (title: any): Promise<Movie[]> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
-    return movie.find({
-        where: { title: Like(`%${title}%`) },
+    const x = await movie.find({
+        where: { title: ILike(`%${title}%`) },
         order: { title: 'ASC' },
         relations: ['people'],
     });
+    if (x.length === 0) throw new Error('No Movie Found With This Title');
+    return x;
 };
 
 export const getAllMoviesByPeopleModel = async (full_name: any): Promise<Movie[]> => {
@@ -30,6 +32,7 @@ export const getAllMoviesByPeopleModel = async (full_name: any): Promise<Movie[]
         }
     });
 
+    if (data.length === 0) throw new Error('No Character Found With This Full Name');
     return data;
 };
 
@@ -49,8 +52,8 @@ export const findByNamesModel = async (names: string[]): Promise<People[]> => {
 
 export const addMovieModel = async (data: Movie, people: People[], picture: string): Promise<Movie> => {
     const movie: Repository<Movie> = getManager().getRepository(Movie);
-    let x = await movie.findOne({where: {title: data.title}})
-    if (x) throw new Error(`Movie with title: "${data.title}" already exist!`)
+    const x = await movie.findOne({ where: { title: data.title } });
+    if (x) throw new Error(`Movie with title: "${data.title}" already exist!`);
 
     const movieToBeSaved: Movie = new Movie();
     movieToBeSaved.title = data.title;

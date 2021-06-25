@@ -1,3 +1,3 @@
 export const config = {
-    defaultPicture: 'defaultPicture.png'
-}
+    defaultPicture: 'defaultPicture.png',
+};

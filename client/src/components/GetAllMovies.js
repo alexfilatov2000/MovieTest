@@ -44,6 +44,12 @@ const useStyles = makeStyles((theme) => ({
     input: {
         verticalAlign: "middle",
         paddingRight: 10
+    },
+    form: {
+        border: "1px solid black",
+        margin: 10,
+        padding: 10,
+        flex: 1
     }
 }));
 
@@ -55,6 +61,7 @@ const GetAllMovies = () => {
 
     const [value, setValue] = useState('');
     const [type, setType] = useState('title');
+    const [sort, setSort] = useState('ASC');
 
 
     useEffect(() => {
@@ -66,64 +73,102 @@ const GetAllMovies = () => {
         dispatch(getAllMoviesByOptionR(value, type))
     }
 
+    const sortSubmit = (e) => {
+        e.preventDefault();
+        dispatch(getAllMoviesR(sort))
+    }
+
     return (
         <div className={classes.root}>
             <Home/>
 
-            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-                <FormControl component="fieldset">
-                    <FormLabel component="legend">Options</FormLabel>
-                    <RadioGroup value={type} onChange={(e) => setType(e.target.value)}>
-                        <FormControlLabel value="title" control={<Radio />} label="Search By Title" />
-                        <FormControlLabel value="full_name" control={<Radio />} label="Search By Character Name" />
-                    </RadioGroup>
-                </FormControl>
+            <Box display="flex">
+                <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Options</FormLabel>
+                        <RadioGroup value={type} onChange={(e) => setType(e.target.value)}>
+                            <FormControlLabel value="title" control={<Radio />} label="Search By Title" />
+                            <FormControlLabel value="full_name" control={<Radio />} label="Search By Character Name" />
+                        </RadioGroup>
+                    </FormControl>
 
-                <Box className={classes.inpAndButt}>
-                    <TextField
-                        className={classes.input}
-                        onChange={(e) => setValue(e.target.value)}
-                        label="Value"
-                        name="val"
-                        variant="outlined"
-                        value={value}
-                        required
-                    />
+                    <Box className={classes.inpAndButt}>
+                        <TextField
+                            className={classes.input}
+                            onChange={(e) => setValue(e.target.value)}
+                            label="Value"
+                            name="val"
+                            variant="outlined"
+                            value={value}
+                            required
+                        />
 
+                        <Button
+                            type="submit"
+                            color="secondary"
+                            variant="contained"
+
+                        >
+                            Search
+                        </Button>
+                    </Box>
+                </form>
+
+                <form noValidate autoComplete="off" onSubmit={sortSubmit} className={classes.form}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Sort</FormLabel>
+                        <RadioGroup value={sort} onChange={(e) => setSort(e.target.value)}>
+                            <FormControlLabel value="ASC" control={<Radio />} label="Sort alphabetically" />
+                            <FormControlLabel value="DESC" control={<Radio />} label="Sort descending" />
+                        </RadioGroup>
+                    </FormControl>
+                    <br/>
                     <Button
                         type="submit"
                         color="secondary"
                         variant="contained"
-
                     >
-                        Search
+                        Sort
                     </Button>
-                </Box>
-            </form>
+                </form>
 
-            <Grid container spacing={2}>
-                {movie.movies.map(item => (
-                    <Grid item xs={2} key={item.id}>
-                        <CardActionArea onClick={() => history.push(`movies/${item.id}`)}>
-                            <CardMedia
-                                className={classes.media}
-                                image={config.url+"/"+item.picture}
-                                title="Contemplative Reptile"
-                            />
-                            <CardContent className={classes.data}>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    {item.title}
-                                </Typography>
+            </Box>
 
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    Release Date - {item.year}
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
+
+            {movie.error &&
+                <div>
+                    <Typography variant="h4" className={classes.header}>
+                        {movie.error}
+                    </Typography>
+                </div>
+            }
+
+            {!movie.error &&
+                <div>
+                    <Grid container spacing={2}>
+                        {movie.movies.map(item => (
+                            <Grid item xs={2} key={item.id}>
+                                <CardActionArea onClick={() => history.push(`movies/${item.id}`)}>
+                                    <CardMedia
+                                        className={classes.media}
+                                        image={config.url+"/"+item.picture}
+                                        title="Contemplative Reptile"
+                                    />
+                                    <CardContent className={classes.data}>
+                                        <Typography gutterBottom variant="h5" component="h2">
+                                            {item.title}
+                                        </Typography>
+
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            Release Date - {item.year}
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
-            </Grid>
-
+                </div>
+            }
         </div>
     );
 }

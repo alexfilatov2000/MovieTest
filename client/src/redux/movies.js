@@ -75,6 +75,9 @@ const slice = createSlice({
         deleteMovieSuccess: (state, action) => {
             state.openDeleteDialog = false;
         },
+        getAllMoviesFailure: (state, action) => {
+            state.error = action.payload;
+        },
     }
 })
 export default slice.reducer;
@@ -85,11 +88,12 @@ export default slice.reducer;
 const { getAllMoviesSuccess, getSpecMovieSuccess, addMovieSuccess, addMovieFailure,
     getAllMoviesByOptionSuccess, dialogOpenSuccess,
     dialogCloseSuccess, saveTxtFailure, saveTxtSuccess,
-    addMoviePending, onCloseSuccess, onCloseError, setOpenDialogSuccess, deleteMovieSuccess } = slice.actions;
+    addMoviePending, onCloseSuccess, onCloseError, setOpenDialogSuccess, deleteMovieSuccess,
+    getAllMoviesFailure} = slice.actions;
 
-export const getAllMoviesR = () => async dispatch => {
+export const getAllMoviesR = (order = 'ASC') => async dispatch => {
     try {
-        const res = await axios.get(`${config.url}/api/movies`);
+        const res = await axios.get(`${config.url}/api/movies?order=${order}`);
         dispatch(getAllMoviesSuccess(res.data));
     } catch (err) {
     }
@@ -130,6 +134,7 @@ export const getAllMoviesByOptionR = (value, type) => async dispatch => {
         const res = await axios.get(`${config.url}/api/movies?${type}=${value}`);
         dispatch(getAllMoviesByOptionSuccess(res.data));
     } catch (err) {
+        dispatch(getAllMoviesFailure(err.response.data.error));
     }
 }
 

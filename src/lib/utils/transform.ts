@@ -1,4 +1,4 @@
-import {checkIfEmpty} from "./checkIfEmpty";
+import { checkIfEmpty } from './checkIfEmpty';
 
 interface people {
     full_name?: string;

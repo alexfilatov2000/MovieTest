@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteMovieR, getSpecMovieR, setOpenDialog} from "../redux/movies";
+import {getSpecMovieR, setOpenDialog} from "../redux/movies";
 import {
     Avatar,
     Box,

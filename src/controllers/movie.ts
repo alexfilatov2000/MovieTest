@@ -12,7 +12,7 @@ import { addMovieSchema } from '../lib/joi/movieSchema';
 import { readFile } from '../lib/utils/readMovies';
 import { transform } from '../lib/utils/transform';
 import { addPeopleModel } from '../models/people';
-import { config } from "../config";
+import { config } from '../config';
 
 export default class MovieController {
     public static async getAllMovies(ctx: Context): Promise<void> {
@@ -23,7 +23,7 @@ export default class MovieController {
             } else if (ctx.query.full_name) {
                 movies = await getAllMoviesByPeopleModel(ctx.query.full_name);
             } else {
-                movies = await getAllMoviesModel();
+                movies = await getAllMoviesModel(ctx.query.order);
             }
             ctx.body = movies;
         } catch (err) {
